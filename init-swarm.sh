@@ -6,14 +6,12 @@ STACK="cc-docker"
 # Obtain information from OpenStack. It is important that the last two variables are named LC_* (see last comment in this script).
 # The three variables correspond to output variables of the server-landscape.yaml template.
 echo "Obtainining information about stack ${STACK}..."
-export MASTER_FLOATING=$(openstack stack show floating_ip)
-export LC_MASTER_PRIVATE=$(openstack stack show private_ip)
-export LC_BACKEND_IPS=$(openstack stack show backend_ips)
+export MASTER_FLOATING=$([[TODO]])
+export LC_MASTER_PRIVATE=$([[TODO]])
+export LC_BACKEND_IPS=$([[TODO]])
 
 # Copy docker-compose files to the frontend server
-# docker cp ./Frontend/docker-compose.yml frontend:/docker-compose.yml
-# OR # docker-machine scp frontend:/usr/share/hypervisor_etc
-
+#sudo docker cp ./Frontend/docker-compose.yml cc-frontend-docker:./docker-compose.yml
 
 # Define a multi-line variable containing the script to be executed on the frontend machine.
 # The tasks of this script:
