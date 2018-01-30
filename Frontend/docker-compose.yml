@@ -1,1 +1,18 @@
-[[TODO]]
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+     - "80:80"
+    volumes:
+     - /etc:/hypervisor_etc
+  cc-frontend:
+    image: birnbaum/cc-frontend
+    deploy:
+    replicas: 2
+    restart_policy:
+     - condition: on-failure
+    placement:
+     - constraints: node.hostname == cc-frontend
+    enviroment:
+     - C_BACKEND_SERVERS = {CC_BACKEND_SERVERS} 
