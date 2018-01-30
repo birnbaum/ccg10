@@ -53,7 +53,7 @@ for i in $LC_BACKEND_IPS; do ssh $SSHOPTS ubuntu@$i "$backend_setup_1 && $backen
 
 # Launch the frontend stack
 export CC_BACKEND_SERVERS="$LC_BACKEND_IPS"
-# sudo -E docker [LC_MASTER_PRIVATE]
+sudo -E docker [LC_MASTER_PRIVATE]
 
 xxxxxxxxxxxxxxxxx
 
