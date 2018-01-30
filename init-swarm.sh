@@ -6,12 +6,12 @@ STACK="cc-docker"
 # Obtain information from OpenStack. It is important that the last two variables are named LC_* (see last comment in this script).
 # The three variables correspond to output variables of the server-landscape.yaml template.
 echo "Obtainining information about stack ${STACK}..."
-export MASTER_FLOATING=$([[TODO]])
-export LC_MASTER_PRIVATE=$([[TODO]])
-export LC_BACKEND_IPS=$([[TODO]])
+export MASTER_FLOATING=$(openstack stack output show cc-docker floating_ip -c output_value -f value)
+export LC_MASTER_PRIVATE=$(openstack stack output show cc-docker private_ip -c output_value -f value)
+export LC_BACKEND_IPS=$(openstack stack output show cc-docker backend_ips -c output_value -f value | jq -r @tsv)
 
 # Copy docker-compose files to the frontend server
-[[TODO]]
+sudo scp ./frontend/docker-compose.yml ubuntu@MASTER_FLOATING:/hypervisor_etc/
 
 # Define a multi-line variable containing the script to be executed on the frontend machine.
 # The tasks of this script:
@@ -25,21 +25,21 @@ read -d '' INIT_SCRIPT <<'xxxxxxxxxxxxxxxxx'
 sudo docker ps &> /dev/null || sudo service docker restart
 
 # Initialize the Docker swarm
-sudo [[TODO]]
+sudo docker swarm init --advertise-addr 10.200.2.92
 
 # Make sure the SSH connection to the backend servers works without user interaction
 SSHOPTS="-o StrictHostKeyChecking=no -o ConnectTimeout=3 -o BatchMode=yes"
 ssh-keyscan $LC_BACKEND_IPS > ~/.ssh/known_hosts
 
 # Obtain a token that can be used to join the swarm as a worker
-TOKEN=$(sudo docker [[TODO]])
+TOKEN=$(sudo docker swarm join-token -q worker)
 
 # Prepare the script to execute on the backends to join the docker swarm.
 # First make sure that docker is running properly...
 backend_setup_1="{ sudo docker ps &> /dev/null || sudo service docker restart; }"
 
 # ... then join the docker swarm on the frontend server
-backend_setup_2="sudo docker [[TODO]]"
+backend_setup_2="sudo docker swarm join --token "$TOKEN""
 
 # Connect to the backend servers and make them join the swarm
 for i in $LC_BACKEND_IPS; do ssh $SSHOPTS ubuntu@$i "$backend_setup_1 && $backend_setup_2"; done
