@@ -11,7 +11,7 @@ export LC_MASTER_PRIVATE=$(openstack stack output show cc-docker private_ip -c o
 export LC_BACKEND_IPS=$(openstack stack output show cc-docker backend_ips -c output_value -f value | jq -r @tsv)
 
 # Copy docker-compose files to the frontend server
-sudo scp ./frontend/docker-compose.yml ubuntu@MASTER_FLOATING:/hypervisor_etc/
+sudo scp ./frontend/docker-compose.yml ubuntu@$MASTER_FLOATING:/docker-compose-frontend.yml
 
 # Define a multi-line variable containing the script to be executed on the frontend machine.
 # The tasks of this script:
@@ -25,7 +25,7 @@ read -d '' INIT_SCRIPT <<'xxxxxxxxxxxxxxxxx'
 sudo docker ps &> /dev/null || sudo service docker restart
 
 # Initialize the Docker swarm
-sudo docker swarm init --advertise-addr 10.200.2.92
+sudo docker swarm init --advertise-addr $LC_MASTER_PRIVATE
 
 # Make sure the SSH connection to the backend servers works without user interaction
 SSHOPTS="-o StrictHostKeyChecking=no -o ConnectTimeout=3 -o BatchMode=yes"
@@ -39,7 +39,7 @@ TOKEN=$(sudo docker swarm join-token -q worker)
 backend_setup_1="{ sudo docker ps &> /dev/null || sudo service docker restart; }"
 
 # ... then join the docker swarm on the frontend server
-backend_setup_2="sudo docker swarm join --token "$TOKEN""
+backend_setup_2="sudo docker swarm join --token "$TOKEN" $LC_MASTER_PRIVATE:2377"
 
 # Connect to the backend servers and make them join the swarm
 for i in $LC_BACKEND_IPS; do ssh $SSHOPTS ubuntu@$i "$backend_setup_1 && $backend_setup_2"; done
