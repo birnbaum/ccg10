@@ -11,7 +11,7 @@ export LC_MASTER_PRIVATE=$([[TODO]])
 export LC_BACKEND_IPS=$([[TODO]])
 
 # Copy docker-compose files to the frontend server
-[[TODO]]
+#sudo docker cp ./Frontend/docker-compose.yml cc-frontend-docker:./docker-compose.yml
 
 # Define a multi-line variable containing the script to be executed on the frontend machine.
 # The tasks of this script:
@@ -25,14 +25,14 @@ read -d '' INIT_SCRIPT <<'xxxxxxxxxxxxxxxxx'
 sudo docker ps &> /dev/null || sudo service docker restart
 
 # Initialize the Docker swarm
-sudo [[TODO]]
+sudo docker swarm init 
 
 # Make sure the SSH connection to the backend servers works without user interaction
 SSHOPTS="-o StrictHostKeyChecking=no -o ConnectTimeout=3 -o BatchMode=yes"
 ssh-keyscan $LC_BACKEND_IPS > ~/.ssh/known_hosts
 
 # Obtain a token that can be used to join the swarm as a worker
-TOKEN=$(sudo docker [[TODO]])
+TOKEN=$(sudo docker swarm join-token -q worker)
 
 # Prepare the script to execute on the backends to join the docker swarm.
 # First make sure that docker is running properly...
