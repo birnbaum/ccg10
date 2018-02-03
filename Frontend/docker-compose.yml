@@ -5,9 +5,11 @@ services:
     ports:
      - "80:80"
     volumes:
-     - /etc:/hypervisor_etc
+     - type: volume
+       source: /etc
+       target: /hypervisor_etc
   cc-frontend:
-    image: birnbaum/cc-frontend
+    image: cc-frontend
     deploy:
     replicas: 2
     restart_policy:
@@ -15,4 +17,4 @@ services:
     placement:
      - constraints: node.hostname == cc-frontend
     enviroment:
-     - C_BACKEND_SERVERS = {CC_BACKEND_SERVERS} 
+     - CC_BACKEND_SERVERS = {CC_BACKEND_SERVERS} 
