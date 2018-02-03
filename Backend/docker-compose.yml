@@ -9,7 +9,7 @@ services:
        source: /etc
        target: /hypervisor_etc
   cc-backend:
-    image: cc-backend
+    image: birnbaum/cc-backend
     deploy:
     replicas: 5
     restart_policy:

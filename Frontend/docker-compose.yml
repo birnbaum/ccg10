@@ -9,7 +9,7 @@ services:
        source: /etc
        target: /hypervisor_etc
   cc-frontend:
-    image: cc-frontend
+    image: birnbaum/cc-frontend
     deploy:
     replicas: 2
     restart_policy:
