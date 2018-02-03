@@ -48,11 +48,11 @@ backend_setup_2="sudo docker swarm join --token "$TOKEN" $LC_MASTER_PRIVATE:2377
 for i in $LC_BACKEND_IPS; do ssh $SSHOPTS ubuntu@$i "$backend_setup_1 && $backend_setup_2"; done
 
 # Launch the backend stack
- sudo -E docker [LC_BACKEND_IPS]
+sudo -E docker stack deploy --compose-file Backend/docker-compose.yml backend
 
 # Launch the frontend stack
 export CC_BACKEND_SERVERS="$LC_BACKEND_IPS"
-sudo -E docker [LC_MASTER_PRIVATE]
+sudo -E docker stack deploy --compose-file Frontend/docker-compose.yml frontend
 
 xxxxxxxxxxxxxxxxx
 
