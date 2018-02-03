@@ -1,18 +1,16 @@
 version: '3'
 services:
-  web:
-    build: .
+  cc-backend:
+    image: birnbaum/cc-backend
     ports:
      - "80:8000"
     volumes:
      - type: volume
        source: /etc
        target: /hypervisor_etc
-  cc-backend:
-    image: birnbaum/cc-backend
     deploy:
-    replicas: 5
-    restart_policy:
-     - condition: on-failure
-    placement:
-     - constraints: node.hostname != cc-frontend
+      replicas: 5
+      restart_policy:
+       - condition: on-failure
+      placement:
+       - constraints: node.hostname != cc-docker-frontend
