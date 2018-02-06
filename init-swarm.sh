@@ -12,8 +12,8 @@ export LC_MASTER_PRIVATE=$(openstack stack output show cc-docker private_ip -c o
 export LC_BACKEND_IPS=$(openstack stack output show cc-docker backend_ips -c output_value -f value | jq -r @tsv)
 
 # Copy docker-compose files to the frontend server
-sudo scp ./frontend/docker-compose.yml ubuntu@$MASTER_FLOATING:/docker-compose-frontend.yml
-
+sudo scp ./Frontend/docker-compose.yml ubuntu@$MASTER_FLOATING:/docker-compose-frontend.yml
+sudo scp ./Backend/docker-compose.yml ubuntu@$MASTER_FLOATING:/docker-compose-backend.yml
 
 # Define a multi-line variable containing the script to be executed on the frontend machine.
 # The tasks of this script:
