@@ -9,7 +9,7 @@ echo "Obtainining information about stack ${STACK}..."
 
 export MASTER_FLOATING=$(openstack stack output show $STACK floating_ip -c output_value -f value)
 export LC_MASTER_PRIVATE=$(openstack stack output show $STACK private_ip -c output_value -f value)
-export LC_BACKEND_IPS=$(openstack stack output show $STACK backend_ips -c output_value -f value)
+export LC_BACKEND_IPS=$(openstack stack output show $STACK backend_ips -c output_value -f value | jq -r @tsv)
 
 # Copy docker-compose files to the frontend server
 scp ./Frontend/docker-compose.yml ubuntu@$MASTER_FLOATING:docker-compose-frontend.yml
