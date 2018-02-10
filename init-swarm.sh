@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # This matches the STACK name in create-stack.sh
-STACK="cc-docker"
+STACK="cc-docker-fake"
 
 # Obtain information from OpenStack. It is important that the last two variables are named LC_* (see last comment in this script).
 # The three variables correspond to output variables of the server-landscape.yaml template.
 echo "Obtainining information about stack ${STACK}..."
 
-export MASTER_FLOATING=$(openstack stack output show cc-docker floating_ip -c output_value -f value)
-export LC_MASTER_PRIVATE=$(openstack stack output show cc-docker private_ip -c output_value -f value)
-export LC_BACKEND_IPS=$(openstack stack output show cc-docker backend_ips -c output_value -f value | jq -r @tsv)
+export MASTER_FLOATING=$(openstack stack output show cc-docker-fake floating_ip -c output_value -f value)
+export LC_MASTER_PRIVATE=$(openstack stack output show cc-docker-fake private_ip -c output_value -f value)
+export LC_BACKEND_IPS=$(openstack stack output show cc-docker-fake backend_ips -c output_value -f value)
 
 # Copy docker-compose files to the frontend server
 sudo scp ./Frontend/docker-compose.yml ubuntu@$MASTER_FLOATING:/docker-compose-frontend.yml
