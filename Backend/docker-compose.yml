@@ -12,4 +12,4 @@ services:
         condition: on-failure
       placement:
         constraints:
-          - node.hostname != cc-docker-frontend
+          - node.hostname != cc-docker-fake-frontend
